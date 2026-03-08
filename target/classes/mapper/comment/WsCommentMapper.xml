@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wineshop.comment.mapper.WsCommentMapper">
+
+    <resultMap id="BaseMap" type="com.wineshop.comment.entity.WsComment">
+        <id property="id" column="id"/>
+        <result property="orderId" column="order_id"/>
+        <result property="orderItemId" column="order_item_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="score" column="score"/>
+        <result property="content" column="content"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <resultMap id="CommentableOrderItemMap" type="com.wineshop.comment.vo.CommentableOrderItemVO">
+        <result property="orderId" column="order_id"/>
+        <result property="orderItemId" column="order_item_id"/>
+        <result property="productId" column="product_id"/>
+    </resultMap>
+
+    <sql id="BaseColumns">id, order_id, order_item_id, user_id, product_id, score, content, status, created_at, updated_at</sql>
+
+    <select id="selectCommentableOrderItem" resultMap="CommentableOrderItemMap">
+        select oi.order_id, oi.id as order_item_id, oi.product_id
+        from ws_order_item oi
+                 inner join ws_order o on oi.order_id = o.id
+        where oi.id = #{orderItemId}
+          and o.user_id = #{userId}
+          and o.status = 3
+        limit 1
+    </select>
+
+    <select id="countByOrderItemId" resultType="int">
+        select count(1)
+        from ws_comment
+        where order_item_id = #{orderItemId}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_comment(order_id, order_item_id, user_id, product_id, score, content, status)
+        values (#{orderId}, #{orderItemId}, #{userId}, #{productId}, #{score}, #{content}, #{status})
+    </insert>
+
+    <select id="selectVisibleByProductId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_comment
+        where product_id = #{productId}
+          and status = 1
+        order by created_at desc
+    </select>
+
+    <select id="selectByUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_comment
+        where user_id = #{userId}
+        order by created_at desc
+    </select>
+
+
+    <select id="selectAll" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_comment
+        order by created_at desc
+    </select>
+
+    <update id="updateStatusById">
+        update ws_comment
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ws_comment where id = #{id}
+    </delete>
+
+</mapper>

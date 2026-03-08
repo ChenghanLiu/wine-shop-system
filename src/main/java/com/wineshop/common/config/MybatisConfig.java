@@ -17,7 +17,8 @@ import org.springframework.context.annotation.Configuration;
         "com.wineshop.comment.mapper",
         "com.wineshop.banner.mapper",
         "com.wineshop.notice.mapper",
-        "com.wineshop.activity.mapper"
+        "com.wineshop.activity.mapper",
+        "com.wineshop.statistics.mapper"
 })
 public class MybatisConfig {
 }
