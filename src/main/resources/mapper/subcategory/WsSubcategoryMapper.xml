@@ -38,4 +38,5 @@
         delete from ws_subcategory where id = #{id}
     </delete>
 
+    <!-- TODO: add subcategory list SQL -->
 </mapper>

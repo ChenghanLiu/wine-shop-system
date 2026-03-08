@@ -22,6 +22,8 @@
 
     <select id="selectById" resultMap="BaseMap">
         select <include refid="BaseColumns"/>
+    <select id="selectById" resultMap="BaseMap">
+        select id, name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend, created_at, updated_at
         from ws_product
         where id = #{id}
         limit 1
@@ -63,4 +65,5 @@
         delete from ws_product where id = #{id}
     </delete>
 
+    <!-- TODO: add product list/detail/recommend SQL -->
 </mapper>
