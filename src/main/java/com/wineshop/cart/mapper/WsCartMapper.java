@@ -20,3 +20,4 @@ public interface WsCartMapper {
 
     int deleteByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
 }
+
