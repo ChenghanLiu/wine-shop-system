@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wineshop.address.mapper.WsAddressMapper">
+
+    <resultMap id="BaseMap" type="com.wineshop.address.entity.WsAddress">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="receiverName" column="receiver_name"/>
+        <result property="receiverPhone" column="receiver_phone"/>
+        <result property="province" column="province"/>
+        <result property="city" column="city"/>
+        <result property="district" column="district"/>
+        <result property="detailAddress" column="detail_address"/>
+        <result property="isDefault" column="is_default"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="BaseColumns">id, user_id, receiver_name, receiver_phone, province, city, district, detail_address, is_default, created_at, updated_at</sql>
+
+    <select id="selectByUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_address
+        where user_id = #{userId}
+        order by is_default desc, id desc
+    </select>
+
+    <select id="selectByIdAndUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_address
+        where id = #{id} and user_id = #{userId}
+        limit 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_address(user_id, receiver_name, receiver_phone, province, city, district, detail_address, is_default)
+        values (#{userId}, #{receiverName}, #{receiverPhone}, #{province}, #{city}, #{district}, #{detailAddress}, #{isDefault})
+    </insert>
+
+    <update id="updateByIdAndUserId">
+        update ws_address
+        set receiver_name = #{receiverName},
+            receiver_phone = #{receiverPhone},
+            province = #{province},
+            city = #{city},
+            district = #{district},
+            detail_address = #{detailAddress},
+            is_default = #{isDefault}
+        where id = #{id} and user_id = #{userId}
+    </update>
+
+    <delete id="deleteByIdAndUserId">
+        delete from ws_address where id = #{id} and user_id = #{userId}
+    </delete>
+
+    <update id="clearDefaultByUserId">
+        update ws_address set is_default = 0 where user_id = #{userId}
+    </update>
+
+    <update id="setDefaultByIdAndUserId">
+        update ws_address set is_default = 1 where id = #{id} and user_id = #{userId}
+    </update>
+
+</mapper>
