@@ -16,3 +16,6 @@ public interface WsFavoriteMapper {
 
     int deleteByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
 }
+
+
+

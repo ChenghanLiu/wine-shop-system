@@ -24,3 +24,5 @@ public interface WsCartMapper {
 
     int deleteSelectedByUserId(@Param("userId") Long userId);
 }
+}
+

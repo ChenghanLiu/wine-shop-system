@@ -11,4 +11,7 @@ public interface WsOrderItemMapper {
     int batchInsert(@Param("items") List<WsOrderItem> items);
 
     List<WsOrderItem> selectByOrderId(@Param("orderId") Long orderId);
+
+@Mapper
+public interface WsOrderItemMapper {
 }

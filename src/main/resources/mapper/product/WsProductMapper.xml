@@ -25,4 +25,5 @@
         limit 1
     </select>
 
+    <!-- TODO: add product list/detail/recommend SQL -->
 </mapper>

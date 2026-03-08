@@ -7,4 +7,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface WsProductMapper {
     WsProduct selectById(@Param("id") Long id);
+
+@Mapper
+public interface WsProductMapper {
 }

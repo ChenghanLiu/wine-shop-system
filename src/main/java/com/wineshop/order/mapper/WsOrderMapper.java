@@ -20,4 +20,7 @@ public interface WsOrderMapper {
     int cancelOrder(@Param("id") Long id, @Param("userId") Long userId);
 
     int confirmOrder(@Param("id") Long id, @Param("userId") Long userId, @Param("receiveTime") LocalDateTime receiveTime);
+
+@Mapper
+public interface WsOrderMapper {
 }
