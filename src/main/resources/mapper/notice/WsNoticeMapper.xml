@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wineshop.notice.mapper.WsNoticeMapper">
+
+    <resultMap id="BaseMap" type="com.wineshop.notice.entity.WsNotice">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="content" column="content"/>
+        <result property="type" column="type"/>
+        <result property="status" column="status"/>
+        <result property="publishTime" column="publish_time"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="BaseColumns">id, title, content, type, status, publish_time, created_at, updated_at</sql>
+
+    <select id="selectAll" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_notice
+        order by id desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_notice(title, content, type, status, publish_time)
+        values (#{title}, #{content}, #{type}, #{status}, #{publishTime})
+    </insert>
+
+    <update id="updateById">
+        update ws_notice
+        set title = #{title},
+            content = #{content},
+            type = #{type},
+            status = #{status},
+            publish_time = #{publishTime}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ws_notice where id = #{id}
+    </delete>
+
+</mapper>

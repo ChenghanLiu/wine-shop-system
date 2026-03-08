@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wineshop.category.mapper.WsCategoryMapper">
+
+    <resultMap id="BaseMap" type="com.wineshop.category.entity.WsCategory">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="sort" column="sort"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="BaseColumns">id, name, sort, status, created_at, updated_at</sql>
+
+    <select id="selectAll" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_category
+        order by sort asc, id asc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_category(name, sort, status)
+        values (#{name}, #{sort}, #{status})
+    </insert>
+
+    <update id="updateById">
+        update ws_category
+        set name = #{name},
+            sort = #{sort},
+            status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ws_category where id = #{id}
+    </delete>
+
+</mapper>
