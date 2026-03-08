@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wineshop.favorite.mapper.WsFavoriteMapper">
+
+    <resultMap id="BaseMap" type="com.wineshop.favorite.entity.WsFavorite">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <sql id="BaseColumns">id, user_id, product_id, created_at</sql>
+
+    <select id="selectByUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_favorite
+        where user_id = #{userId}
+        order by id desc
+    </select>
+
+    <select id="selectByUserIdAndProductId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_favorite
+        where user_id = #{userId} and product_id = #{productId}
+        limit 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_favorite(user_id, product_id)
+        values (#{userId}, #{productId})
+    </insert>
+
+    <delete id="deleteByUserIdAndProductId">
+        delete from ws_favorite where user_id = #{userId} and product_id = #{productId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wineshop.cart.mapper.WsCartMapper">
+
+    <resultMap id="BaseMap" type="com.wineshop.cart.entity.WsCart">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="productId" column="product_id"/>
+        <result property="quantity" column="quantity"/>
+        <result property="selected" column="selected"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="BaseColumns">id, user_id, product_id, quantity, selected, created_at, updated_at</sql>
+
+    <select id="selectByUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_cart
+        where user_id = #{userId}
+        order by id desc
+    </select>
+
+    <select id="selectSelectedByUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_cart
+        where user_id = #{userId} and selected = 1
+        order by id desc
+    </select>
+
+    <select id="selectByUserIdAndProductId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_cart
+        where user_id = #{userId} and product_id = #{productId}
+        limit 1
+    </select>
+
+    <select id="selectByIdAndUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_cart
+        where id = #{id} and user_id = #{userId}
+        limit 1
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_cart(user_id, product_id, quantity, selected)
+        values (#{userId}, #{productId}, #{quantity}, #{selected})
+    </insert>
+
+    <update id="updateByIdAndUserId">
+        update ws_cart
+        set quantity = #{quantity},
+            selected = #{selected}
+        where id = #{id} and user_id = #{userId}
+    </update>
+
+    <delete id="deleteByIdAndUserId">
+        delete from ws_cart
+        where id = #{id} and user_id = #{userId}
+    </delete>
+
+    <delete id="deleteSelectedByUserId">
+        delete from ws_cart
+        where user_id = #{userId} and selected = 1
+    </delete>
+
+</mapper>
