@@ -10,6 +10,8 @@ import java.util.List;
 public interface WsCartMapper {
     List<WsCart> selectByUserId(@Param("userId") Long userId);
 
+    List<WsCart> selectSelectedByUserId(@Param("userId") Long userId);
+
     WsCart selectByUserIdAndProductId(@Param("userId") Long userId, @Param("productId") Long productId);
 
     WsCart selectByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
@@ -19,5 +21,8 @@ public interface WsCartMapper {
     int updateByIdAndUserId(WsCart cart);
 
     int deleteByIdAndUserId(@Param("id") Long id, @Param("userId") Long userId);
+
+    int deleteSelectedByUserId(@Param("userId") Long userId);
+}
 }
 

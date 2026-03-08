@@ -21,6 +21,13 @@
         order by id desc
     </select>
 
+    <select id="selectSelectedByUserId" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_cart
+        where user_id = #{userId} and selected = 1
+        order by id desc
+    </select>
+
     <select id="selectByUserIdAndProductId" resultMap="BaseMap">
         select <include refid="BaseColumns"/>
         from ws_cart
@@ -50,6 +57,11 @@
     <delete id="deleteByIdAndUserId">
         delete from ws_cart
         where id = #{id} and user_id = #{userId}
+    </delete>
+
+    <delete id="deleteSelectedByUserId">
+        delete from ws_cart
+        where user_id = #{userId} and selected = 1
     </delete>
 
 </mapper>
