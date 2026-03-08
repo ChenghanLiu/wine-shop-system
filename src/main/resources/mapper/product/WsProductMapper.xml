@@ -18,12 +18,52 @@
         <result property="updatedAt" column="updated_at"/>
     </resultMap>
 
+    <sql id="BaseColumns">id, name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend, created_at, updated_at</sql>
+
+    <select id="selectById" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
     <select id="selectById" resultMap="BaseMap">
         select id, name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend, created_at, updated_at
         from ws_product
         where id = #{id}
         limit 1
     </select>
+
+    <select id="selectAll" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_product
+        order by id desc
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into ws_product(name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend)
+        values (#{name}, #{categoryId}, #{subcategoryId}, #{coverImage}, #{price}, #{stock}, #{sales}, #{description}, #{status}, #{isRecommend})
+    </insert>
+
+    <update id="updateById">
+        update ws_product
+        set name = #{name},
+            category_id = #{categoryId},
+            subcategory_id = #{subcategoryId},
+            cover_image = #{coverImage},
+            price = #{price},
+            stock = #{stock},
+            sales = #{sales},
+            description = #{description},
+            status = #{status},
+            is_recommend = #{isRecommend}
+        where id = #{id}
+    </update>
+
+    <update id="updateStatusById">
+        update ws_product
+        set status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ws_product where id = #{id}
+    </delete>
 
     <!-- TODO: add product list/detail/recommend SQL -->
 </mapper>

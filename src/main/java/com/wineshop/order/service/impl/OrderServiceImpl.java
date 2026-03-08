@@ -154,6 +154,37 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
+    public void deliver(Long id) {
+        int updated = wsOrderMapper.deliverOrder(id, LocalDateTime.now());
+        if (updated == 0) {
+            throw new BusinessException(ResultCode.BAD_REQUEST, "Only pending shipment orders can be delivered");
+        }
+    }
+
+    @Override
+    public List<WsOrder> adminList(Integer status) {
+        return wsOrderMapper.selectAll(status);
+    }
+
+    @Override
+    public OrderDetailVO adminDetail(Long id) {
+        WsOrder order = wsOrderMapper.selectById(id);
+        if (order == null) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "Order not found");
+        }
+        List<WsOrderItem> items = wsOrderItemMapper.selectByOrderId(order.getId());
+        return new OrderDetailVO(order, items);
+    }
+
+    @Override
+    public void refund(Long id) {
+        int updated = wsOrderMapper.refundOrder(id);
+        if (updated == 0) {
+            throw new BusinessException(ResultCode.BAD_REQUEST, "Only paid or completed orders can be refunded");
+        }
+    }
+
     private String generateOrderNo() {
         String timePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
         int rand = ThreadLocalRandom.current().nextInt(1000, 9999);

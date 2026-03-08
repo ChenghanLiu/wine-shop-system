@@ -18,4 +18,12 @@ public interface OrderService {
     void cancel(Long id);
 
     void confirm(Long id);
+
+    void deliver(Long id);
+
+    List<WsOrder> adminList(Integer status);
+
+    OrderDetailVO adminDetail(Long id);
+
+    void refund(Long id);
 }

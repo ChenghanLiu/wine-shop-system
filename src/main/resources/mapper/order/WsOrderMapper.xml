@@ -75,6 +75,14 @@
           and status = 0
     </update>
 
+    <update id="deliverOrder">
+        update ws_order
+        set status = 2,
+            delivery_time = #{deliveryTime}
+        where id = #{id}
+          and status = 1
+    </update>
+
     <update id="confirmOrder">
         update ws_order
         set status = 3,
@@ -82,6 +90,29 @@
         where id = #{id}
           and user_id = #{userId}
           and status = 2
+    </update>
+
+    <select id="selectAll" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_order
+        <if test="status != null">
+            where status = #{status}
+        </if>
+        order by created_at desc
+    </select>
+
+    <select id="selectById" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_order
+        where id = #{id}
+        limit 1
+    </select>
+
+    <update id="refundOrder">
+        update ws_order
+        set status = 5
+        where id = #{id}
+          and status in (1, 2, 3)
     </update>
 
 </mapper>

@@ -21,6 +21,11 @@ public interface WsOrderMapper {
 
     int confirmOrder(@Param("id") Long id, @Param("userId") Long userId, @Param("receiveTime") LocalDateTime receiveTime);
 
-@Mapper
-public interface WsOrderMapper {
+    int deliverOrder(@Param("id") Long id, @Param("deliveryTime") LocalDateTime deliveryTime);
+
+    List<WsOrder> selectAll(@Param("status") Integer status);
+
+    WsOrder selectById(@Param("id") Long id);
+
+    int refundOrder(@Param("id") Long id);
 }
