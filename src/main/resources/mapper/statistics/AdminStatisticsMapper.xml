@@ -4,10 +4,10 @@
 
     <select id="selectOverview" resultType="map">
         select
-            (select count(1) from ws_user) as userCount,
-            (select count(1) from ws_product) as productCount,
-            (select count(1) from ws_order) as orderCount,
-            (select ifnull(sum(pay_amount), 0) from ws_order where status in (1,2,3)) as paidAmount
+                (select count(1) from ws_user) as userCount,
+                (select count(1) from ws_product) as productCount,
+                (select count(1) from ws_order) as orderCount,
+                (select ifnull(sum(pay_amount), 0) from ws_order where status in (1,2,3)) as paidAmount
     </select>
 
     <select id="selectTopProducts" resultType="map">
@@ -16,18 +16,20 @@
                p.sales as sales
         from ws_product p
         order by p.sales desc, p.id desc
-        limit 10
+            limit 10
     </select>
 
     <select id="selectCategoryRatio" resultType="map">
         select c.id as categoryId,
                c.name as categoryName,
-               ifnull(sum(oi.total_price), 0) as amount
+               ifnull(sum(case when o.status in (1, 2, 3) then oi.total_price else 0 end), 0) as amount
         from ws_category c
                  left join ws_product p on p.category_id = c.id
                  left join ws_order_item oi on oi.product_id = p.id
+                 left join ws_order o on o.id = oi.order_id
         group by c.id, c.name
         order by amount desc, c.id asc
     </select>
 
 </mapper>
+

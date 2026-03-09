@@ -18,5 +18,9 @@ public interface WsProductMapper {
 
     int updateStatusById(@Param("id") Long id, @Param("status") Integer status);
 
+    int increaseSales(@Param("id") Long id, @Param("quantity") Integer quantity);
+
+    int decreaseStock(@Param("id") Long id, @Param("quantity") Integer quantity);
+
     int deleteById(@Param("id") Long id);
 }

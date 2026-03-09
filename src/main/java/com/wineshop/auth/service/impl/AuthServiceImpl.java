@@ -4,6 +4,7 @@ import com.wineshop.admin.entity.WsAdmin;
 import com.wineshop.admin.mapper.WsAdminMapper;
 import com.wineshop.auth.dto.AdminLoginRequest;
 import com.wineshop.auth.dto.UserLoginRequest;
+import com.wineshop.auth.dto.UserProfileUpdateRequest;
 import com.wineshop.auth.dto.UserRegisterRequest;
 import com.wineshop.auth.service.AuthService;
 import com.wineshop.auth.vo.CurrentUserInfoResponse;
@@ -64,11 +65,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse adminLogin(AdminLoginRequest request) {
-        WsAdmin admin = wsAdminMapper.selectByUsername(request.getUsername());
-        if (admin == null || admin.getStatus() == null || admin.getStatus() != 1) {
-            throw new BusinessException(ResultCode.BAD_REQUEST, "Admin not found or disabled");
-        }
-        if (!request.getPassword().equals(admin.getPassword())) {
+        WsAdmin admin = wsAdminMapper.selectByUsernameAndPassword(request.getUsername(), request.getPassword());
+        if (admin == null) {
             throw new BusinessException(ResultCode.BAD_REQUEST, "Invalid username or password");
         }
 
@@ -88,13 +86,45 @@ public class AuthServiceImpl implements AuthService {
             if (admin == null || admin.getStatus() == null || admin.getStatus() != 1) {
                 throw new BusinessException(ResultCode.UNAUTHORIZED);
             }
-            return new CurrentUserInfoResponse(admin.getId(), admin.getUsername(), SecurityConstants.ROLE_ADMIN);
+            return new CurrentUserInfoResponse(admin.getId(), admin.getUsername(), SecurityConstants.ROLE_ADMIN, null, null);
         }
 
         WsUser user = wsUserMapper.selectById(loginUser.getId());
         if (user == null || user.getStatus() == null || user.getStatus() != 1) {
             throw new BusinessException(ResultCode.UNAUTHORIZED);
         }
-        return new CurrentUserInfoResponse(user.getId(), user.getUsername(), SecurityConstants.ROLE_USER);
+        return new CurrentUserInfoResponse(user.getId(), user.getUsername(), SecurityConstants.ROLE_USER, user.getNickname(), user.getPhone());
+    }
+
+    @Override
+    public void updateCurrentUser(UserProfileUpdateRequest request) {
+        UserContext.LoginUser loginUser = UserContext.get();
+        if (loginUser == null || !SecurityConstants.ROLE_USER.equals(loginUser.getRole())) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED);
+        }
+        WsUser user = new WsUser();
+        user.setId(loginUser.getId());
+        user.setNickname(request.getNickname());
+        user.setPhone(request.getPhone());
+        if (wsUserMapper.updateProfileById(user) == 0) {
+            throw new BusinessException(ResultCode.NOT_FOUND, "User not found");
+        }
+    }
+
+    @Override
+    public void changeAdminPassword(String oldPassword, String newPassword) {
+        UserContext.LoginUser loginUser = UserContext.get();
+        if (loginUser == null || !SecurityConstants.ROLE_ADMIN.equals(loginUser.getRole())) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED);
+        }
+        WsAdmin admin = wsAdminMapper.selectById(loginUser.getId());
+        if (admin == null || admin.getStatus() == null || admin.getStatus() != 1) {
+            throw new BusinessException(ResultCode.UNAUTHORIZED);
+        }
+        if (!admin.getPassword().equals(oldPassword)) {
+            throw new BusinessException(ResultCode.BAD_REQUEST, "Old password is incorrect");
+        }
+        wsAdminMapper.updatePasswordById(admin.getId(), newPassword);
     }
 }
+

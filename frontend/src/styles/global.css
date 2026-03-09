@@ -1,0 +1,9 @@
+:root {
+    --wine-red: #7d1020;
+    --wine-red-soft: #9f1f33;
+    --wine-bg: #fff;
+    --text-main: #2a2a2a;
+    --text-secondary: #6a6a6a;
+    --line-color: #ececec;
+    --card-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}

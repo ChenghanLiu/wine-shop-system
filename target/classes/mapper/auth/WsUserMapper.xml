@@ -29,9 +29,35 @@
         limit 1
     </select>
 
+    <select id="selectAll" resultMap="BaseMap">
+        select <include refid="BaseColumns"/>
+        from ws_user
+        order by id desc
+    </select>
+
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into ws_user(username, password, nickname, phone, status)
         values (#{username}, #{password}, #{nickname}, #{phone}, #{status})
     </insert>
 
+    <update id="updateProfileById">
+        update ws_user
+        set nickname = #{nickname},
+            phone = #{phone}
+        where id = #{id}
+    </update>
+
+    <update id="updateByAdmin">
+        update ws_user
+        set nickname = #{nickname},
+            phone = #{phone},
+            status = #{status}
+        where id = #{id}
+    </update>
+
+    <delete id="deleteById">
+        delete from ws_user where id = #{id}
+    </delete>
+
 </mapper>
+

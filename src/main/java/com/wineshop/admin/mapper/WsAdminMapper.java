@@ -8,5 +8,10 @@ import org.apache.ibatis.annotations.Param;
 public interface WsAdminMapper {
     WsAdmin selectByUsername(@Param("username") String username);
 
+    WsAdmin selectByUsernameAndPassword(@Param("username") String username, @Param("password") String password);
+
     WsAdmin selectById(@Param("id") Long id);
+
+    int updatePasswordById(@Param("id") Long id, @Param("password") String password);
 }
+

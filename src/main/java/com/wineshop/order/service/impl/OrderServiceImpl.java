@@ -128,12 +128,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void pay(Long id) {
         Long userId = AuthHelper.currentUser().getId();
         int updated = wsOrderMapper.payOrder(id, userId, LocalDateTime.now());
         if (updated == 0) {
             throw new BusinessException(ResultCode.BAD_REQUEST, "Only pending payment orders can be paid");
         }
+        increaseSalesByOrderId(id);
     }
 
     @Override
@@ -146,20 +148,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    @Transactional
     public void confirm(Long id) {
         Long userId = AuthHelper.currentUser().getId();
+        WsOrder order = wsOrderMapper.selectByIdAndUserId(id, userId);
         int updated = wsOrderMapper.confirmOrder(id, userId, LocalDateTime.now());
         if (updated == 0) {
             throw new BusinessException(ResultCode.BAD_REQUEST, "Only pending receipt orders can be confirmed");
         }
+        if (order != null && order.getPayTime() == null) {
+            increaseSalesByOrderId(id);
+        }
     }
 
     @Override
+    @Transactional
     public void deliver(Long id) {
         int updated = wsOrderMapper.deliverOrder(id, LocalDateTime.now());
         if (updated == 0) {
             throw new BusinessException(ResultCode.BAD_REQUEST, "Only pending shipment orders can be delivered");
         }
+        decreaseStockByOrderId(id);
     }
 
     @Override
@@ -182,6 +191,24 @@ public class OrderServiceImpl implements OrderService {
         int updated = wsOrderMapper.refundOrder(id);
         if (updated == 0) {
             throw new BusinessException(ResultCode.BAD_REQUEST, "Only paid or completed orders can be refunded");
+        }
+    }
+
+
+    private void increaseSalesByOrderId(Long orderId) {
+        List<WsOrderItem> items = wsOrderItemMapper.selectByOrderId(orderId);
+        for (WsOrderItem item : items) {
+            wsProductMapper.increaseSales(item.getProductId(), item.getQuantity());
+        }
+    }
+
+    private void decreaseStockByOrderId(Long orderId) {
+        List<WsOrderItem> items = wsOrderItemMapper.selectByOrderId(orderId);
+        for (WsOrderItem item : items) {
+            int updated = wsProductMapper.decreaseStock(item.getProductId(), item.getQuantity());
+            if (updated == 0) {
+                throw new BusinessException(ResultCode.BAD_REQUEST, "Insufficient stock for product: " + item.getProductId());
+            }
         }
     }
 

@@ -9,4 +9,6 @@ public class CurrentUserInfoResponse {
     private Long id;
     private String username;
     private String role;
+    private String nickname;
+    private String phone;
 }

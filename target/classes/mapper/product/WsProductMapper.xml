@@ -20,9 +20,8 @@
 
     <sql id="BaseColumns">id, name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend, created_at, updated_at</sql>
 
-
     <select id="selectById" resultMap="BaseMap">
-        select id, name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend, created_at, updated_at
+        select <include refid="BaseColumns"/>
         from ws_product
         where id = #{id}
         limit 1
@@ -36,7 +35,7 @@
 
     <insert id="insert" useGeneratedKeys="true" keyProperty="id">
         insert into ws_product(name, category_id, subcategory_id, cover_image, price, stock, sales, description, status, is_recommend)
-        values (#{name}, #{categoryId}, #{subcategoryId}, #{coverImage}, #{price}, #{stock}, #{sales}, #{description}, #{status}, #{isRecommend})
+        values (#{name}, #{categoryId}, #{subcategoryId}, #{coverImage}, #{price}, #{stock}, ifnull(#{sales}, 0), #{description}, #{status}, #{isRecommend})
     </insert>
 
     <update id="updateById">
@@ -47,7 +46,7 @@
             cover_image = #{coverImage},
             price = #{price},
             stock = #{stock},
-            sales = #{sales},
+            sales = ifnull(#{sales}, sales),
             description = #{description},
             status = #{status},
             is_recommend = #{isRecommend}
@@ -60,9 +59,21 @@
         where id = #{id}
     </update>
 
+
+    <update id="increaseSales">
+        update ws_product
+        set sales = sales + #{quantity}
+        where id = #{id}
+    </update>
+
+    <update id="decreaseStock">
+        update ws_product
+        set stock = stock - #{quantity}
+        where id = #{id}
+          and stock >= #{quantity}
+    </update>
     <delete id="deleteById">
         delete from ws_product where id = #{id}
     </delete>
 
-    <!-- TODO: add product list/detail/recommend SQL -->
 </mapper>

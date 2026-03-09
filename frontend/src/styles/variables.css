@@ -1,0 +1,47 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    color: var(--text-main);
+    background: var(--wine-bg);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.page-wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 20px 40px;
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.card {
+    border-radius: 14px;
+    background: #fff;
+    box-shadow: var(--card-shadow);
+    border: 1px solid #f2f2f2;
+}
+
+.el-button--primary {
+    --el-button-bg-color: var(--wine-red);
+    --el-button-border-color: var(--wine-red);
+    --el-button-hover-bg-color: var(--wine-red-soft);
+    --el-button-hover-border-color: var(--wine-red-soft);
+}
+
+.el-tag--danger {
+    --el-tag-bg-color: #fff1f3;
+    --el-tag-border-color: #ffc7d0;
+    --el-tag-text-color: var(--wine-red);
+}
